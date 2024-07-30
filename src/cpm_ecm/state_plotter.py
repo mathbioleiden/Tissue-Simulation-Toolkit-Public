@@ -65,7 +65,8 @@ class StatePlotter:
     def draw(
             self, i: int, par_pos: npt.NDArray[np.float64],
             par_type: npt.NDArray[np.int32], bond_groups: npt.NDArray[np.int32],
-            pde: npt.NDArray[np.float64], cpm: npt.NDArray[np.int32],
+            # pde: npt.NDArray[np.float64], 
+            cpm: npt.NDArray[np.int32],
             draw: bool = True, save: bool = True, out_dir: Optional[Path] = None
             ) -> None:
         """Update the diagram with new data
@@ -81,7 +82,7 @@ class StatePlotter:
             out_dir: Where to write output, if any
         """
         self._draw_ecm(par_pos, par_type, bond_groups)
-        self._draw_pde(pde)
+        # self._draw_pde(pde)
         self._draw_cpm(cpm)
 
         if save:
