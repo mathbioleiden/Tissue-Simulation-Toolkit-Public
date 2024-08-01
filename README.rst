@@ -40,7 +40,7 @@ Documentation is avaiable `here <https://www.mathbioleiden.nl/tst-docs/docs/html
 Downloading and installing
 --------------------------
 
-TST 2.0 is available from GitHub at https://github.com/mathbioleiden/Tissue-Simulation-Toolkit. It can be built and run on Windows, macOS and Linux using the instructions below.
+TST 2.0 is available from GitHub at https://github.com/ComputationalAnimalDevelopment/Tissue-Simulation-Toolkit. It can be built and run on Windows, macOS and Linux using the instructions below.
 
 Windows
 ~~~~~~~
@@ -66,7 +66,7 @@ Next, you can get the source by cloning the repository from GitHub. You can use 
 
 .. code-block:: bash
 
-    git clone --recursive -b TST2.0 git@github.com:rmerks/Tissue-Simulation-Toolkit.git
+    git clone --recursive -b TST2.0 git@github.com:ComputationalAnimalDevelopment/Tissue-Simulation-Toolkit.git
 
 If you are on a Mac then you will have to modify the file :code:`lib/MultiCellDS/v1.0/v1.0.0/Makefile` to get the TST to compile. Find the line
 
@@ -189,4 +189,4 @@ We also created a script that automatically formats any file that you commit usi
 Who do I talk to?
 -----------------
 
-* Roeland Merks
+* Erika Tsingos
