@@ -57,7 +57,7 @@ PYVER_MINOR := $(word 2,$(PYTHON_VERNUM))
 # Check the python version
 PYVER_MAJOR_REQ :=3
 PYVER_MINOR_MIN :=9
-PYVER_MINOR_MAX :=12
+PYVER_MINOR_MAX :=11
 
 PYVER_MINOR_MIN_OK := $(shell [ $(PYVER_MINOR) -ge $(PYVER_MINOR_MIN) ] && echo "1" || echo "0")
 PYVER_MINOR_MAX_OK := $(shell [ $(PYVER_MINOR) -le $(PYVER_MINOR_MAX) ] && echo "1" || echo "0")
