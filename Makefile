@@ -109,7 +109,7 @@ $(VENV): pyver
 	python3 -m venv venv
 
 $(VENV_NUMPY): $(VENV)
-	. venv/bin/activate && python3 -m pip install numpy
+	. venv/bin/activate && python3 -m pip install numpy ruamel.yaml
 
 $(VENV_HOOMD): $(VENV) $(VENV_NUMPY)
 	. venv/bin/activate && $(MAKE) -C $(HOOMD_DIR) install
