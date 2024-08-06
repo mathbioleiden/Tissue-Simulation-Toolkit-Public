@@ -92,6 +92,8 @@ class StatePlotter:
             self._fig.savefig(file_name, format='png', dpi=self._dpi)
 
         if draw:
+            import matplotlib
+            matplotlib.use('Qt5Agg')
             plt.draw()
             plt.show(block=False)
             plt.pause(0.000001)

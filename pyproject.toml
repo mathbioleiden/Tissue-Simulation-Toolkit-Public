@@ -4,7 +4,7 @@ version = "2.0.0-dev"
 dependencies = [
     # "hoomd",          # Cannot be installed by pip, installed by Makefile
     # "mpi4py",         # Optional, installed by Makefile if needed
-    "muscle3==0.7.1",
+    "muscle3==0.7.2",
     "numpy",
     "scipy"
 ]
@@ -37,6 +37,7 @@ env_list =
 #    py39
     py310
     py311
+    py312
 
 [testenv]
 deps =
