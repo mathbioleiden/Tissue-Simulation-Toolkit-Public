@@ -71,7 +71,7 @@ def main() -> None:
                 particles['positions'].array,
                 particles['types'].array,
                 data['ecm_state']['bonds']['groups'].array,
-                # data['cpm_state']['pde'].array,
+                data['cpm_state']['pde'].array,
                 data['cpm_state']['cpm'].array,
                 draw=False, save=True, out_dir=data_dir)
 

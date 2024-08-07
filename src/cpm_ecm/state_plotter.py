@@ -8,7 +8,6 @@ from typing import List, Optional
 
 import matplotlib
 matplotlib.use('Qt5Agg')
-import matplotlib.cm as cm
 from matplotlib.contour import QuadContourSet
 from matplotlib.image import AxesImage
 from matplotlib.lines import Line2D
@@ -67,7 +66,7 @@ class StatePlotter:
     def draw(
             self, i: int, par_pos: npt.NDArray[np.float64],
             par_type: npt.NDArray[np.int32], bond_groups: npt.NDArray[np.int32],
-            # pde: npt.NDArray[np.float64], 
+            pde: npt.NDArray[np.float64], 
             cpm: npt.NDArray[np.int32],
             draw: bool = True, save: bool = True, out_dir: Optional[Path] = None
             ) -> None:
@@ -85,7 +84,7 @@ class StatePlotter:
         """
         
         self._draw_ecm(par_pos, par_type, bond_groups)
-        # self._draw_pde(pde)
+        self._draw_pde(pde)
         self._draw_cpm(cpm)
 
         if save:
@@ -138,7 +137,7 @@ class StatePlotter:
             self._pde_image.remove()
 
         self._pde_image = plt.imshow(
-                pde[0], origin = 'upper', cmap = cm.get_cmap('Purples'))
+                pde[0], origin = 'upper', cmap = matplotlib.colormaps['hot_r'])
 
     def _draw_cpm(self, cpm: npt.NDArray[np.int32]) -> None:
         """Update the CPM state part of the diagram

@@ -50,7 +50,7 @@ def main() -> None:
                         particles['positions'].array,
                         particles['types'].array,
                         ecm_state_msg.data['bonds']['groups'].array,
-                        # cpm_state_msg.data['pde'].array,
+                        cpm_state_msg.data['pde'].array,
                         cpm_state_msg.data['cpm'].array, save=False)
 
 if __name__ == '__main__':
