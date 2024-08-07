@@ -15,8 +15,8 @@ model:
     simulate_ecm.state_out: state_viewer.ecm_state_in
 
 settings:
-  graphics: false
-  state_output_interval: 20
+  graphics: true
+  state_output_interval: 20n
   image_height: 600
 
 resources:
