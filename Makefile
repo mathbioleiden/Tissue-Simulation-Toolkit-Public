@@ -105,11 +105,12 @@ endif  # ENABLE_MPI
 
 
 # Due to dependency issues with Python3.12 and Muscle3, we create a VENV with the highest available python less than 3.12
+# Numpy also got a major update recently, and some dependencies do not work with the newer version unfortunately.
 $(VENV): pyver
 	python3 -m venv venv
 
 $(VENV_NUMPY): $(VENV)
-	. venv/bin/activate && python3 -m pip install numpy ruamel.yaml
+	. venv/bin/activate && python3 -m pip install numpy==1.25.0
 
 $(VENV_HOOMD): $(VENV) $(VENV_NUMPY)
 	. venv/bin/activate && $(MAKE) -C $(HOOMD_DIR) install
@@ -131,12 +132,15 @@ mpi4py: $(VENV)
 	. venv/bin/activate && python3 -m pip install mpi4py
 
 python: $(VENV)
-	. venv/bin/activate && pip install --upgrade pip && python3 -m pip install -e . --verbose
+	. venv/bin/activate && python3 -m pip install --upgrade pip && python3 -m pip install -e . --verbose
 
-pyqt5: $(VENV)
-	. venv/bin/activate && pip install PyQt5
+pyqt5: $(VENV) $(VENV_NUMPY)
+	. venv/bin/activate && python3 -m pip install PyQt5
 
-ecm: $(VENV_HOOMD) python
+py_ruamel: $(VENV) $(VENV_NUMPY)
+	. venv/bin/activate && python3 -m pip install ruamel.yaml
+
+ecm: $(VENV_HOOMD) python pyqt5 py_ruamel
 
 
 # Models
