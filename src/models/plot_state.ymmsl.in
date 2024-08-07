@@ -16,7 +16,7 @@ model:
 
 settings:
   graphics: true
-  state_output_interval: 20n
+  state_output_interval: 20
   image_height: 600
 
 resources:
