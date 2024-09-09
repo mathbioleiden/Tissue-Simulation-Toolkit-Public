@@ -189,4 +189,4 @@ We also created a script that automatically formats any file that you commit usi
 Who do I talk to?
 -----------------
 
-* Erika Tsingos
+* Roeland Merks
