@@ -6,7 +6,8 @@ import logging
 from pathlib import Path
 from typing import List, Optional
 
-import matplotlib.cm as cm
+import matplotlib
+matplotlib.use('Qt5Agg')
 from matplotlib.contour import QuadContourSet
 from matplotlib.image import AxesImage
 from matplotlib.lines import Line2D
@@ -38,12 +39,12 @@ class StatePlotter:
         self._img_height = img_height
         self._img_width = int(img_height * Lx / Ly)
         self._dpi = 100.0
-        offset = 0.0
+        offset = 75.0
 
         figsize = (self._img_width / self._dpi, self._img_height / self._dpi)
         self._fig = plt.figure(figsize=figsize, dpi=self._dpi)
         self._ax = plt.axes((0, 0, 1, 1), frameon = False, xticks=[], yticks=[])
-
+        
         self._ax.set_xlim(-offset, 2 * self._Lx + offset)
         # flip y-axis to match TST graphics
         self._ax.set_ylim(2 * self._Ly + offset, -offset)
@@ -65,7 +66,8 @@ class StatePlotter:
     def draw(
             self, i: int, par_pos: npt.NDArray[np.float64],
             par_type: npt.NDArray[np.int32], bond_groups: npt.NDArray[np.int32],
-            pde: npt.NDArray[np.float64], cpm: npt.NDArray[np.int32],
+            pde: npt.NDArray[np.float64], 
+            cpm: npt.NDArray[np.int32],
             draw: bool = True, save: bool = True, out_dir: Optional[Path] = None
             ) -> None:
         """Update the diagram with new data
@@ -80,6 +82,7 @@ class StatePlotter:
             save: Whether to save to file in out_dir
             out_dir: Where to write output, if any
         """
+        
         self._draw_ecm(par_pos, par_type, bond_groups)
         self._draw_pde(pde)
         self._draw_cpm(cpm)
@@ -117,15 +120,12 @@ class StatePlotter:
                 self._bond_lines[i].set_data(x, y)
                 self._bond_lines[i].set_visible(True)
             else:
-                line, = plt.plot(x, y, '-', color='#000000', alpha=0.3)
+                line, = plt.plot(x, y, '-', color='#40597F', alpha=0.8, linewidth= 0.5)
                 self._bond_lines.append(line)
-
-        for i in range(len(bond_groups), len(self._bond_lines)):
-            self._bond_lines[i].set_visible(False)
 
         adhesions = par_pos[par_type == ParticleType.adhesion.value]
         self._adhesion_marks.set_data(adhesions[:, 0], adhesions[:, 1])
-        self._adhesion_marks.set_color('#FFFF00')
+        self._adhesion_marks.set_color('#0BAA00')
 
     def _draw_pde(self, pde: npt.NDArray[np.float64]) -> None:
         """Update the PDE part of the diagram
@@ -137,7 +137,7 @@ class StatePlotter:
             self._pde_image.remove()
 
         self._pde_image = plt.imshow(
-                pde[0], origin = 'upper', cmap = cm.get_cmap('Purples'))
+                pde[0], origin = 'upper', cmap = matplotlib.colormaps['hot_r'])
 
     def _draw_cpm(self, cpm: npt.NDArray[np.int32]) -> None:
         """Update the CPM state part of the diagram
@@ -157,9 +157,9 @@ class StatePlotter:
         levels = np.array([0.5, np.max(cpm) + 0.5])
         self._cpm_contour_fill = plt.contourf(
                 self._cpm_grid[0], self._cpm_grid[1], cpm, levels = levels,
-                alpha = 0.5, colors = '#FF0000')
+                alpha = 0.5, colors = '#CDAECD')
 
         self._cpm_contours = plt.contour(
                 self._cpm_grid[0], self._cpm_grid[1], cpm,
-                alpha = 1, colors = ['#FF0000'], linewidths = 0.1,
+                alpha = 1, colors = ['#A16EA1'], linewidths = 0.1,
                 antialiased = False, zorder = 2.05)

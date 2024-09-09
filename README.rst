@@ -35,7 +35,7 @@ and visualization of:
 Documentation
 -------------
 
-Documentation is avaiable `here <https://www.mathbioleiden.nl/tst-docs/docs/html/index.html>`_. Note that this is work in process and not all functions are fully documented yet!
+Documentation is available `here <https://www.mathbioleiden.nl/tst-docs/docs/html/index.html>`_. Note that this is work in process and not all functions are fully documented yet!
 
 Downloading and installing
 --------------------------
@@ -66,7 +66,7 @@ Next, you can get the source by cloning the repository from GitHub. You can use 
 
 .. code-block:: bash
 
-    git clone --recursive -b TST2.0 git@github.com:rmerks/Tissue-Simulation-Toolkit.git
+    git clone --recursive -b TST2.0 git@github.com:mathbioleiden/Tissue-Simulation-Toolkit.git
 
 If you are on a Mac then you will have to modify the file :code:`lib/MultiCellDS/v1.0/v1.0.0/Makefile` to get the TST to compile. Find the line
 

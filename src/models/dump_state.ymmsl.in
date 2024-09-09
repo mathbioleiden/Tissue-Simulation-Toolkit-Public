@@ -24,5 +24,5 @@ resources:
 
 implementations:
   state_dumper:
-    virtual_env: TST-HOOMD-MUSCLE3/venv
+    virtual_env: Tissue-Simulation-Toolkit/venv
     executable: state_dumper

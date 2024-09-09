@@ -15,7 +15,7 @@ model:
     simulate_ecm.state_out: state_viewer.ecm_state_in
 
 settings:
-  graphics: false
+  graphics: true
   state_output_interval: 20
   image_height: 600
 
@@ -25,5 +25,5 @@ resources:
 
 implementations:
   state_viewer:
-    virtual_env: TST-HOOMD-MUSCLE3/venv
+    virtual_env: Tissue-Simulation-Toolkit/venv
     executable: state_viewer

@@ -98,6 +98,7 @@ TIMESTEP {
     static Info *info = new Info(*dish, *this);
     static Plotter plotter = Plotter(dish, this);
 
+    /* cell-ECM model */
     if (i == 0) {
       // request creation of initial adhesions
       CellECMInteractions interactions;
@@ -122,10 +123,24 @@ TIMESTEP {
       if (par.useopencl) {
         PROFILE(opencl_diff,
                 dish->PDEfield->SecreteAndDiffuseCL(dish->CPM, par.pde_its);)
+      } else if (i == par.relaxation) {
+        dish->PDEfield->InitialisePDE(dish->CPM);
+        dish->PDEfield->InitialiseDiffusionCoefficients(dish->CPM);
+
+        #ifdef CUDA_ENABLED
+        if (par.usecuda)
+          dish->PDEfield->InitialiseCuda();
+        #endif
+
       } else {
         for (int r = 0; r < par.pde_its; r++) {
-          dish->PDEfield->Secrete(dish->CPM);
-          dish->PDEfield->Diffuse(1);
+          if (!par.usecuda) {
+            dish->PDEfield->ReactionDiffusion(dish->CPM);
+          }
+          #ifdef CUDA_ENABLED
+          if (par.usecuda)
+            dish->PDEfield->cuPDEsteps(dish->CPM, par.pde_its);
+          #endif
         }
       }
     }
@@ -140,14 +155,16 @@ TIMESTEP {
     if (instance->is_connected("state_out")) {
       if (i % instance->get_setting_as<int64_t>("state_output_interval") == 0) {
         std::cerr << "i = " << i << ", sending on state_out" << std::endl;
+        
         auto *cpm_sigma = dish->CPM->getSigma()[0];
         Data cpm_state =
             Data::grid(cpm_sigma,
                        {static_cast<std::size_t>(dish->CPM->SizeX()),
                         static_cast<std::size_t>(dish->CPM->SizeY())},
                        {"x", "y"}, StorageOrder::last_adjacent);
+        
         auto const &pde = dish->PDEfield;
-        auto *pde_sigma = pde->getSigma()[0][0];
+        auto *pde_sigma = pde->getPDEvars()[0][0];
         Data pde_state =
             Data::grid(pde_sigma,
                        {static_cast<std::size_t>(pde->Layers()),
@@ -179,16 +196,20 @@ TIMESTEP {
   PROFILE_PRINT
 }
 
-void PDE::Secrete(CellularPotts *cpm) {
-  const double dt = par.dt;
+void PDE::InitialisePDE(CellularPotts *cpm) {
   for (int x = 0; x < sizex; x++) {
     for (int y = 0; y < sizey; y++) {
-      // inside cells
-      if (cpm->Sigma(x, y)) {
-        sigma[0][x][y] += par.secr_rate[0] * dt;
-      } else {
-        // outside cells
-        sigma[0][x][y] -= par.decay_rate[0] * dt * sigma[0][x][y];
+      PDEvars[0][x][y] = 0;
+    }
+  }
+  PROFILE_PRINT
+}
+
+void PDE::InitialiseDiffusionCoefficients(CellularPotts *cpm) {
+  for (int x = 0; x < sizex; x++) {
+    for (int y = 0; y < sizey; y++) {
+      for (int l = 0; l < par.n_chem; l++) {
+        DiffCoeffs[l][x][y] = par.diff_coeff[l];
       }
     }
   }
@@ -196,7 +217,33 @@ void PDE::Secrete(CellularPotts *cpm) {
 }
 
 void PDE::DerivativesPDE(CellularPotts *cpm, PDEFIELD_TYPE *derivs, int x,
-                         int y) {}
+                         int y) {
+  // inside cells
+  if (cpm->Sigma(x, y)) {
+    derivs[0] = par.secr_rate[0];
+  } else {
+    // outside cells
+    derivs[0] = -par.decay_rate[0] * PDEvars[0][x][y];
+  }
+  PROFILE_PRINT
+}
+
+void PDE::Secrete(CellularPotts *cpm) {
+  const double dt = par.dt;
+  for (int x = 0; x < sizex; x++) {
+    for (int y = 0; y < sizey; y++) {
+      // inside cells
+      if (cpm->Sigma(x, y)) {
+        PDEvars[0][x][y] = alt_PDEvars[0][x][y] + par.secr_rate[0] * dt;
+      } else {
+        // outside cells
+        PDEvars[0][x][y] = alt_PDEvars[0][x][y] -
+                           par.decay_rate[0] * dt * alt_PDEvars[0][x][y];
+      }
+    }
+  }
+  PROFILE_PRINT
+}
 
 int PDE::MapColour(double val) {
   return (((int)((val / ((val) + 1.)) * 100)) % 100) + 155;
@@ -215,6 +262,8 @@ void Plotter::Plot() {
 }
 
 int main(int argc, char *argv[]) {
+
+  /* muscle3 */
   PortsDescription ports(
       {{Operator::O_I, {"cell_ecm_interactions_out", "state_out"}},
        {Operator::S, {"ecm_boundary_state_in"}}});
