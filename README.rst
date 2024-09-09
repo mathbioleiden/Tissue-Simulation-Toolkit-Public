@@ -35,12 +35,12 @@ and visualization of:
 Documentation
 -------------
 
-Documentation is avaiable `here <https://www.mathbioleiden.nl/tst-docs/docs/html/index.html>`_. Note that this is work in process and not all functions are fully documented yet!
+Documentation is available `here <https://www.mathbioleiden.nl/tst-docs/docs/html/index.html>`_. Note that this is work in process and not all functions are fully documented yet!
 
 Downloading and installing
 --------------------------
 
-TST 2.0 is available from GitHub at https://github.com/ComputationalAnimalDevelopment/Tissue-Simulation-Toolkit. It can be built and run on Windows, macOS and Linux using the instructions below.
+TST 2.0 is available from GitHub at https://github.com/mathbioleiden/Tissue-Simulation-Toolkit. It can be built and run on Windows, macOS and Linux using the instructions below.
 
 Windows
 ~~~~~~~
