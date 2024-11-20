@@ -66,7 +66,7 @@ Next, you can get the source by cloning the repository from GitHub. You can use 
 
 .. code-block:: bash
 
-    git clone --recursive -b TST2.0 git@github.com:rmerks/Tissue-Simulation-Toolkit.git
+    git clone --recursive -b TST2.0 git@github.com:mathbioleiden/Tissue-Simulation-Toolkit.git
 
 If you are on a Mac then you will have to modify the file :code:`lib/MultiCellDS/v1.0/v1.0.0/Makefile` to get the TST to compile. Find the line
 
